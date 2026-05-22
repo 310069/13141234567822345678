@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小龍的魔法書 - Doodle Edition</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            /* 第一張圖的馬卡龍柔和色調 */
+            --bg-cream: #fffdf9;      /* 溫柔米白底色 */
+            --nav-dark: #2c3142;      /* 深灰藍導覽列 */
+            --pastel-yellow: #fff9e6; /* 鵝黃卡片 */
+            --pastel-purple: #f5f0ff; /* 淡紫卡片 */
+            --pastel-green: #eef9f0;  /* 淡綠卡片 */
+            --text-dark: #3a3f50;     /* 炭灰文字 */
+            --star-gold: #f4d068;     /* 星星金黃 */
+        }
+
+        body { 
+            font-family: "Quicksand", "Microsoft JhengHei", sans-serif; 
+            margin: 0; 
+            background: var(--bg-cream); 
+            color: var(--text-dark); 
+            overflow-x: hidden;
+            /* 背景加上可愛的手繪小閃爍星星裝飾 */
+            background-image: radial-gradient(rgba(244, 208, 104, 0.15) 1px, transparent 0);
+            background-size: 24px 24px;
+        }
+
+        /* 導覽列：貼近圖片中的深色俐落質感 */
+        header {
+            background: var(--nav-dark);
+            padding: 0 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .logo { font-size: 1.4rem; font-weight: bold; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+        .logo i { color: var(--star-gold); }
+        
+        .nav { display: flex; list-style: none; gap: 25px; margin: 0; padding: 0; }
+        .nav-item { 
+            font-weight: bold; cursor: pointer; color: #e2e5ec; text-decoration: none; 
+            font-size: 1rem; transition: all 0.3s ease; position: relative;
+        }
+        .nav-item:hover { color: white; }
+        .nav-item:hover::after {
+            content: '✦'; position: absolute; top: -12px; right: -12px; color: var(--star-gold); font-size: 0.7rem;
+        }
+
+        /* 頂部大輪播優化 */
+        .hero-section { padding: 40px 0; background: transparent; }
+        .swiper { width: 90%; max-width: 850px; height: 420px; border-radius: 24px; box-shadow: 0 12px 30px rgba(0,0,0,0.05); border: 4px solid white; }
+        .swiper-slide { display: flex; align-items: center; justify-content: center; background: #fff; }
+        .swiper-slide img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* 內容區塊 */
+        .container { max-width: 950px; margin: 40px auto; padding: 0 20px; }
+        
+        /* 區塊標題：手繪星星點綴 */
+        .category-title { 
+            font-size: 1.6rem; color: var(--nav-dark); margin: 60px 0 25px;
+            display: flex; align-items: center; gap: 10px; font-weight: bold;
+        }
+        .category-title::before { content: '✦'; color: var(--star-gold); font-size: 1.3rem; }
+
+        /* 清單排版 */
+        .report-list { display: grid; grid-template-columns: 1fr; gap: 24px; }
+        
+        /* 卡片主體：應用第一張圖的淡黃、淡紫、淡綠，以及超圓潤轉角 */
+        .report-item {
+            display: flex; border-radius: 24px; overflow: hidden;
+            height: 160px; position: relative; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+        
+        /* 依據照片分配馬卡龍色彩 */
+        .report-item.color-yellow { background: var(--pastel-yellow); }
+        .report-item.color-purple { background: var(--pastel-purple); }
+        .report-item.color-green { background: var(--pastel-green); }
+        
+        /* 滑鼠移入：微發光與可愛上浮 */
+        .report-item:hover { 
+            transform: translateY(-6px);
+            box-shadow: 0 12px 25px rgba(165, 145, 100, 0.12);
+        }
+        
+        /* 左側手繪插畫區域 */
+        .item-img { 
+            width: 160px; min-width: 160px; height: 160px; 
+            display: flex; align-items: center; justify-content: center;
+            padding: 15px; box-sizing: border-box; background: rgba(255,255,255,0.4);
+        }
+        .item-img img { width: 100%; height: 100%; object-fit: contain; transition: 0.5s; }
+        .report-item:hover .item-img img { transform: scale(1.08) rotate(2deg); }
+        
+        /* 右側內文 */
+        .item-content { padding: 22px 25px; display: flex; flex-direction: column; justify-content: flex-start; flex-grow: 1; padding-right: 140px; }
+        .item-content h3 { margin: 0 0 8px; font-size: 1.3rem; color: var(--nav-dark); font-weight: bold; }
+        .item-content p { margin: 0; font-size: 0.9rem; color: #606575; line-height: 1.6; }
+        
+        /* 瀏覽報告按鈕：貼近照片中精緻小巧的深色圓角設計 */
+        .btn-browse {
+            position: absolute; right: 25px; bottom: 22px;
+            background: var(--nav-dark); color: white; text-decoration: none;
+            padding: 8px 18px; font-size: 0.85rem; font-weight: bold;
+            border-radius: 12px; transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(44, 49, 66, 0.15);
+        }
+        .btn-browse:hover { 
+            background: #1a1e29;
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(44, 49, 66, 0.25);
+        }
+
+        /* 裝飾用小星星 */
+        .decor-star { position: absolute; color: var(--star-gold); opacity: 0.5; font-size: 0.8rem; pointer-events: none; }
+
+        footer { text-align: center; padding: 50px; background: #fff; color: #8a90a0; margin-top: 100px; border-top: 1px dashed #e0e5eb; font-size: 0.9rem; }
+
+        /* RWD 手機板完美適應 */
+        @media (max-width: 768px) {
+            header { padding: 0 5%; }
+            .nav { gap: 15px; }
+            .nav-item { font-size: 0.9rem; }
+            .swiper { height: 280px; }
+            .report-item { height: auto; flex-direction: column; }
+            .item-img { width: 100%; height: 150px; padding: 20px; }
+            .item-content { padding: 20px; padding-bottom: 70px; }
+            .btn-browse { width: calc(100% - 40px); right: 20px; bottom: 15px; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo"><i class="fas fa-sparkles"></i> 小龍的魔法書</div>
+    <div class="nav">
+        <a href="#self" class="nav-item">自主學習</a>
+        <a href="#explore" class="nav-item">探究</a>
+        <a href="#extend" class="nav-item">科目延伸</a>
+    </div>
+</header>
+
+<section class="hero-section" data-aos="fade-down">
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="https://drive.google.com/thumbnail?id=1BLQp_YwzvBMQ1EGHSptBdOSrSstkpBiq&sz=800" alt="精選"></div>
+            <div class="swiper-slide"><img src="https://drive.google.com/thumbnail?id=1fcWpFNknNp4wrdjg6S929IdsBgVj3N-G&sz=800" alt="精選"></div>
+            <div class="swiper-slide"><img src="https://drive.google.com/thumbnail?id=1mii-dhymV1mSH_chrA2lDDFfxR2egHvT&sz=800" alt="精選"></div>
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+</section>
+
+<div class="container">
+    
+    <h2 id="self" class="category-title" data-aos="fade-right">自主學習成果</h2>
+    <div class="report-list">
+        
+        <div class="report-item color-yellow" data-aos="fade-up">
+            <div class="item-img">
+                <img src="https://illustrations.popsy.co/amber/healthy-eating.svg" alt="手繪水果">
+            </div>
+            <div class="item-content">
+                <h3>自主學習-營養</h3>
+                <p>探索現代營養學與日常飲食調配，內含個人化膳食計畫與深入的健康數據追蹤分析。</p>
+            </div>
+            <a href="https://canva.link/1fpjzu0lrkaytij" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-purple" data-aos="fade-up">
+            <div class="item-img">
+                <img src="https://illustrations.popsy.co/purple/home-cooking.svg" alt="手繪加工">
+            </div>
+            <div class="item-content">
+                <h3>自主學習-蔬果加工</h3>
+                <p>食品加工技術實作！詳細紀錄蔬菜與水果的加工原理、實驗步驟與成品保存成果。</p>
+            </div>
+            <a href="https://canva.link/cgmaxnv4ekhbalb" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-green" data-aos="fade-up">
+            <div class="item-img">
+                <img src="https://illustrations.popsy.co/gray/chemistry-experiment.svg" alt="手繪分析">
+            </div>
+            <div class="item-content">
+                <h3>自主學習-副食品分析</h3>
+                <p>從嬰幼兒發展與家政生物角度出發，解構不同成長階段副食品的營養配比與調製要點。</p>
+            </div>
+            <a href="https://canva.link/ekzjir69k3zza13" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-yellow" data-aos="fade-up">
+            <div class="item-img">
+                <img src="https://illustrations.popsy.co/amber/medical-research.svg" alt="手繪醫學">
+            </div>
+            <div class="item-content">
+                <h3>台大醫學營隊成果</h3>
+                <p>參與頂尖大學醫學營隊的實務操作與學習紀錄，點燃對醫學與生醫領域的深度探索熱情。</p>
+            </div>
+            <a href="https://canva.link/yr95uiu38jmteg7" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+    </div>
+
+    <h2 id="explore" class="category-title" data-aos="fade-right">探究與實作成果</h2>
+    <div class="report-list">
+
+        <div class="report-item color-purple" data-aos="fade-up">
+            <div class="item-img">
+                <img src="https://illustrations.popsy.co/purple/critical-thinking.svg" alt="手繪科學">
+            </div>
+            <div class="item-content">
+                <h3>探究與實作-彭巴效應</h3>
+                <p>針對特定自然現象展開科學探究，包含嚴謹的實驗假設、變因控制與動態數據模型分析。</p>
+            </div>
+            <a href="https://canva.link/yb6sksofiu0402j" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-green" data-aos="fade-up">
+            <div class="item-img">
+                <img src="https://illustrations.popsy.co/gray/teamwork.svg" alt="手繪骨牌">
+            </div>
+            <div class="item-content">
+                <h3>高二骨牌比賽</h3>
+                <p>團隊合作與機構設計的精彩碰撞！精密計算物理軌道、重力加速度與連鎖反應的歷程紀錄。</p>
+            </div>
+            <a href="https://canva.link/lkof6p5tg4qvmw4" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+    </div>
+
+    <h2 id="extend" class="category-title" data-aos="fade-right">學科延伸專題</h2>
+    <div class="report-list">
+
+        <div class="report-item color-yellow" data-aos="fade-up">
+            <div class="item-img">
+                <img src="https://illustrations.popsy.co/amber/dna.svg" alt="手繪生物">
+            </div>
+            <div class="item-content">
+                <h3>選修生物 1</h3>
+                <p>高中生物核心課堂的延伸探索，針對細胞學、分子生物或生理機能進行進階文獻探討。</p>
+            </div>
+            <a href="https://canva.link/gb7k1j1pvpmwqh4" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-purple" data-aos="fade-up">
+            <div class="item-img">
+                <img src="https://illustrations.popsy.co/purple/creative-writing.svg" alt="手繪英文">
+            </div>
+            <div class="item-content">
+                <h3>英文作文選修</h3>
+                <p>精選多篇邏輯架構完整的寫作作品，展現個人英文批判性思考、修辭與進階語文素養。</p>
+            </div>
+            <a href="https://canva.link/u8k6po5bt7xmegp" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-green" data-aos="fade-up">
+            <div class="item-img">
+                <img src="https://illustrations.popsy.co/gray/navigator.svg" alt="手繪歷史">
+            </div>
+            <div class="item-content">
+                <h3>高一校外教學-歷史</h3>
+                <p>實地走訪古蹟與人文地景，結合在地文史脈絡與實地考察成果的整合性社會領域報告。</p>
+            </div>
+            <a href="https://canva.link/3gydso53e81s9it" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+        <div class="report-item color-yellow" data-aos="fade-up">
+            <div class="item-img">
+                <img src="https://illustrations.popsy.co/amber/designer.svg" alt="手繪設計">
+            </div>
+            <div class="item-content">
+                <h3>音樂海報設計</h3>
+                <p>結合美學與數位工具，深入剖析特定音樂流派或名家歷史的視覺創意專案。</p>
+            </div>
+            <a href="https://canva.link/z7bah2df97nga1x" target="_blank" class="btn-browse">瀏覽報告</a>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    ✨ 小龍的魔法書 ✦ 2026 學習歷程作品集 ✨<br>
+    <span style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px; display:block;">Handcrafted with Pastel & Doodle Magic</span>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    // 初始化淡入動畫
+    AOS.init({ duration: 1000, once: false });
+
+    // 初始化頂部大輪播
+    new Swiper('.swiper', {
+        loop: true,
+        autoplay: { delay: 3500, disableOnInteraction: false },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
+    });
+</script>
+
+</body>
+</html>
